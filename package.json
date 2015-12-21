@@ -1,0 +1,23 @@
+{
+  "name": "node-mysql-migrate",
+  "version": "1.0.0",
+  "description": "MySQL migration tool for Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/talmago/node-mysql-migrate.git"
+  },
+  "author": "Tal Almagor <tal.almagor@ironsrc.com>",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^1.5.0",
+    "bluebird": "^3.1.1",
+    "lodash": "^3.10.1",
+    "log4js": "^0.6.29",
+    "mysql": "^2.10.0",
+    "rc": "^1.1.5"
+  }
+}
