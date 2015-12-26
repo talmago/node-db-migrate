@@ -15,9 +15,27 @@ var exitCode = 0;
  * @param callback: Optional, callback function that will receive the output of the operation.
  */
 function callOperationByName(operation, arguments, callback) {
+
+    var mgr, op,
+        config = Config.db;
+
+    // callback is optional. default is noop.
     callback = callback ? callback : _.noop;
-    var mgr = new SchemaManager(Config.migration.schema, Config.db);
-    var op = _.get(mgr, operation);
+
+    // set schema hardcoded configs
+    if (operation != "baseline") {
+        config.database = Config.migration.schema;
+    }
+
+    // initiate a schema manager for the operation
+    mgr = new SchemaManager(Config.migration.schema, Config.db);
+
+    // operation is not supported
+    op = _.get(mgr, operation);
+    if (!op) {
+        throw new Error("Operation is not supported: " + operation);
+    }
+
     return op.bind(mgr).apply(null, arguments)
         .then(callback)
         .catch(function(e) {

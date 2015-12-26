@@ -68,6 +68,7 @@ $ mysql-migrate info
 [2015-12-26 13:39:53.127] [INFO] [MySQL Client /localhost:3306] - Shutting down connection pool
 [2015-12-26 13:39:53.128] [INFO] console - Exit with status code 0
 
+```
 
 ###### migrate
 
@@ -76,7 +77,7 @@ For example, `/etc/mysql-migraterc/data/myproject/v1_1_Create_User_Table.sql` wi
 the following statement:
 
 ```sql
-CREATE TABLE IF NOT EXISTS myproject.users (
+CREATE TABLE IF NOT EXISTS users (
   name VARCHAR(25) NOT NULL,
   PRIMARY KEY(name)
 );
