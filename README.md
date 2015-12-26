@@ -63,7 +63,7 @@ $ mysql-migrate info
 [2015-12-26 13:39:53.126] [INFO] console - ┌────────┬──────────────┬────────────────┬────────┐
 [2015-12-26 13:39:53.126] [INFO] console - │ Script │ Description  │ Execution Time │ Status │
 [2015-12-26 13:39:53.126] [INFO] console - ├────────┼──────────────┼────────────────┼────────┤
-[2015-12-26 13:39:53.127] [INFO] console - │        │ Base version │ 0 ms           │ 0      │
+[2015-12-26 13:39:53.127] [INFO] console - │        │ Base version │ 0 ms           │ OK     │
 [2015-12-26 13:39:53.127] [INFO] console - └────────┴──────────────┴────────────────┴────────┘
 [2015-12-26 13:39:53.127] [INFO] [MySQL Client /localhost:3306] - Shutting down connection pool
 [2015-12-26 13:39:53.128] [INFO] console - Exit with status code 0
@@ -109,7 +109,7 @@ $ mysql-migrate.js info
 [2015-12-26 14:06:57.271] [INFO] console - ┌─────────────────────────────┬───────────────────┬────────────────┬────────┐
 [2015-12-26 14:06:57.272] [INFO] console - │ Script                      │ Description       │ Execution Time │ Status │
 [2015-12-26 14:06:57.272] [INFO] console - ├─────────────────────────────┼───────────────────┼────────────────┼────────┤
-[2015-12-26 14:06:57.272] [INFO] console - │ v1_1__Create_User_Table.sql │ Create User Table │ 32 ms          │ 0      │
+[2015-12-26 14:06:57.272] [INFO] console - │ v1_1__Create_User_Table.sql │ Create User Table │ 32 ms          │ OK     │
 [2015-12-26 14:06:57.272] [INFO] console - └─────────────────────────────┴───────────────────┴────────────────┴────────┘
 [2015-12-26 14:06:57.272] [INFO] [MySQL Client /localhost:3306] - Shutting down connection pool
 [2015-12-26 14:06:57.273] [INFO] console - Exit with status code 0

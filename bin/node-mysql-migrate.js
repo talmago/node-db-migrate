@@ -39,7 +39,7 @@ function callOperationByName(operation, arguments, callback) {
     return op.bind(mgr).apply(null, arguments)
         .then(callback)
         .catch(function(e) {
-            console.error(e);
+            console.error(e.message);
             exitCode = 1;
         })
         .finally(function() {
@@ -62,7 +62,7 @@ program
             console.log("Schema: `%s`, Version:", Config.migration.schema, version);
             if (version.toLowerCase() != "unknown") {
                 var table = new Table({
-                    head: ['Script', 'Description', 'Execution Time', 'Status']
+                    head: ['Script', 'Description', 'Execution Time', 'Status', 'Reason']
                 });
                 _.each(revision.migrations || [], function(migration) {
                     table.push(
@@ -70,7 +70,8 @@ program
                             _.get(migration, "script", "N/A"),
                             _.get(migration, "description", "N/A"),
                             _.get(migration, "execution_time", "0") + " ms",
-                            _.get(migration, "status", "N/A")
+                            _.get(migration, "status", 1) == 0 ? "OK" : "FAILED",
+                            _.get(migration, "reason", "N/A")
                         ]
                     );
                 });
