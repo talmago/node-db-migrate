@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "bin": {
+    "mysql-migrate": "./bin/node-mysql-migrate.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/talmago/node-mysql-migrate.git"
@@ -13,8 +16,9 @@
   "author": "Tal Almagor <tal.almagor@ironsrc.com>",
   "license": "MIT",
   "dependencies": {
-    "async": "^1.5.0",
     "bluebird": "^3.1.1",
+    "cli-table2": "^0.1.9",
+    "commander": "^2.9.0",
     "lodash": "^3.10.1",
     "log4js": "^0.6.29",
     "mysql": "^2.10.0",
