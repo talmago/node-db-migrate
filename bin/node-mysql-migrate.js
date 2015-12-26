@@ -90,6 +90,14 @@ program
         return callOperationByName('clean', []);
     });
 
+// `repair`
+program
+    .command('repair')
+    .description("repair migration failures")
+    .action(function() {
+        return callOperationByName('repair', [Config.migration.datadir]);
+    });
+
 // `baseline`
 program
     .command('baseline <version>')

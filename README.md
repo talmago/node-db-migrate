@@ -27,6 +27,7 @@ $ mysql-migrate --help
 
     info                show revision information
     clean               drops all objects in the managed schema
+    repair              repair migration failures
     baseline <version>  baseline existing schema to initial version
     migrate [version]   migrate schema to new version
 
@@ -115,6 +116,45 @@ $ mysql-migrate.js info
 [2015-12-26 14:06:57.273] [INFO] console - Exit with status code 0
 
 ```
+
+###### repair
+
+Since failures are documented by the schema manager in the same manner
+as successful events, it is impossible to fix a failure by running the migration again.
+In order to fix a failure, we must call `repair`, which will scan the data directory
+for the same script, but this time with the correct syntax, and re-base the version.
+
+Hence, let's change the example above to have a syntax error:
+
+```sql
+CREATE TABLE IF NOT EXISTS users (
+  name VARCHAR(25) NOT NULL,
+  PRIMARY KEY(user_name)
+);
+```
+
+After trying to run the migration (with no success), there will be no version bump
+but we will be able to see the failures of the attempted version.
+
+```sh
+
+$ mysql-migrate info
+[2015-12-26 17:10:23.921] [INFO] [SchemaMgr/ myproject] - Reading objects from `myproject`.`schema_version`
+[2015-12-26 17:10:24.026] [INFO] console - Schema: `myproject`, Version: 1.0
+[2015-12-26 17:10:24.044] [INFO] console - ┌────────────────────────────┬───────────────────┬────────────────┬────────┬─────────────────────────────────────────────────────────────────────────────┐
+[2015-12-26 17:10:24.044] [INFO] console - │ Script                     │ Description       │ Execution Time │ Status │ Reason                                                                      │
+[2015-12-26 17:10:24.044] [INFO] console - ├────────────────────────────┼───────────────────┼────────────────┼────────┼─────────────────────────────────────────────────────────────────────────────┤
+[2015-12-26 17:10:24.044] [INFO] console - │                            │ Base version      │ 0 ms           │ OK     │                                                                             │
+[2015-12-26 17:10:24.044] [INFO] console - ├────────────────────────────┼───────────────────┼────────────────┼────────┼─────────────────────────────────────────────────────────────────────────────┤
+[2015-12-26 17:10:24.044] [INFO] console - │ v1_1__Create_User_Table.js │ Create User Table │ 15 ms          │ FAILED │ ER_KEY_COLUMN_DOES_NOT_EXITS: Key column 'user_name' doesn't exist in table │
+[2015-12-26 17:10:24.045] [INFO] console - └────────────────────────────┴───────────────────┴────────────────┴────────┴─────────────────────────────────────────────────────────────────────────────┘
+[2015-12-26 17:10:24.048] [INFO] console - Exit with status code 0
+
+```
+
+Calling `migrate` again at this stage will do nothing since the 
+migration tool will ignore any object that was already registered to the schema revision.
+`repair` will go over failures and try to run them again.
 
 ###### clean
 
