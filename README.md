@@ -156,6 +156,34 @@ Calling `migrate` again at this stage will do nothing since the
 migration tool will ignore any object that was already registered to the schema revision.
 `repair` will go over failures and try to run them again.
 
+```sh
+
+$ mysql-migrate repair
+[2015-12-26 17:39:58.266] [INFO] [SchemaMgr/ myproject] - Reading objects from `myproject`.`schema_version`
+[2015-12-26 17:39:58.350] [INFO] [SchemaMgr/ myproject] - Preparing to repair 1.1/v1_1__Create_User_Table.js
+[2015-12-26 17:39:58.360] [INFO] [SchemaMgr/ myproject] - Starting transaction
+[2015-12-26 17:39:58.380] [INFO] [SchemaMgr/ myproject] - Committing transaction
+[2015-12-26 17:39:58.382] [INFO] [SchemaMgr/ myproject] - Saving version `1.1` to `myproject`.`schema_version`
+[2015-12-26 17:39:58.391] [INFO] console - Exit with status code 0
+
+```
+
+If repair completed succesfully, we can now see the version bump.
+
+```sh
+
+$ mysql-migrate info
+[2015-12-26 17:40:05.141] [INFO] [SchemaMgr/ myproject] - Reading objects from `myproject`.`schema_version`
+[2015-12-26 17:40:05.224] [INFO] console - Schema: `myproject`, Version: 1.1
+[2015-12-26 17:40:05.246] [INFO] console - ┌────────────────────────────┬───────────────────┬────────────────┬────────┬────────┐
+[2015-12-26 17:40:05.246] [INFO] console - │ Script                     │ Description       │ Execution Time │ Status │ Reason │
+[2015-12-26 17:40:05.246] [INFO] console - ├────────────────────────────┼───────────────────┼────────────────┼────────┼────────┤
+[2015-12-26 17:40:05.246] [INFO] console - │ v1_1__Create_User_Table.js │ Create User Table │ 30 ms          │ OK     │        │
+[2015-12-26 17:40:05.247] [INFO] console - └────────────────────────────┴───────────────────┴────────────────┴────────┴────────┘
+[2015-12-26 17:40:05.247] [INFO] console - Exit with status code 0
+
+```
+
 ###### clean
 
 ```sh
