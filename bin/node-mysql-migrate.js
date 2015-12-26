@@ -41,7 +41,7 @@ program
     .action(function() {
         return callOperationByName('revision', [], function(revision) {
             var version = _.get(revision, 'version');
-            console.log("Schema Version:", version);
+            console.log("Schema: `%s`, Version:", Config.migration.schema, version);
             if (version.toLowerCase() != "unknown") {
                 var table = new Table({
                     head: ['Script', 'Description', 'Execution Time', 'Status']
