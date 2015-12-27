@@ -1,14 +1,15 @@
 {
   "name": "node-mysql-migrate",
   "version": "1.0.0",
-  "description": "MySQL migration tool for Node.js",
+  "description": "Simple MySQL migration tool written in Node.js",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint lib/**/*.js index.js test/**/*.js"
   },
   "bin": {
     "mysql-migrate": "./bin/node-mysql-migrate.js"
   },
+  "homepage": "https://github.com/felixge/node-mysql-migrate",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/talmago/node-mysql-migrate.git"
@@ -23,5 +24,11 @@
     "log4js": "^0.6.29",
     "mysql": "^2.10.0",
     "rc": "^1.1.5"
+  },
+  "engines": {
+    "node": ">= 0.6"
+  },
+  "devDependencies": {
+    "eslint": "^1.10.3"
   }
 }
