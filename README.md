@@ -1,18 +1,38 @@
 # node-mysql-migrate
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Installation](#installation)
+- [Command line](#command-line)
+    - [baseline](#baseline)
+    - [info](#info)
+    - [migrate](#migrate)
+    - [repair](#repair)
+    - [clean](#clean)
+- [Writing a migration script](#writing-a-migration-script)
+    - [Data Directory](#data-directory)
+    - [Naming](#naming)
+    - [SQL](#sql)
+    - [Node.js](#nodejs)
+- [Using the library](#using-the-library-directly)
+- [Configuration](#configuration)
+
+
 ## Overview
-Simple migration tool for Mysql/Node.js
 
-# Quick Start
+Simple MySQL migration tool written in Node.js. MIT License.
 
-#### Install
+## Quick Start
+
+#### Installation
 
 ```sh
 npm install -g https://github.com/talmago/node-mysql-migrate
 ```
 
-After the installation, you can start using the command line as well as the library.
-
+> **NOTICE:** -g flag is mandatory if you wish to use the command line.
+Use `npm install https://github.com/talmago/node-mysql-migrate` if you want to use the library.
 
 #### Command line
 
@@ -238,7 +258,7 @@ Examples:
 
 ###### SQL
 
-Writing migration script in SQL is pretty straight-forward, as it used the standard
+Writing migration script in SQL is pretty straight-forward, as it uses the standard
 MySQL programming (http://dev.mysql.com/doc/refman/5.7/en/sql-syntax.html). Below is
 a simple example which created a new table in our project called `users`.
 
@@ -276,6 +296,27 @@ module.exports = function(connection) {
 Node.js modules should not start or end a new transaction, as these operations are expected to raise
 runtime errors as well.
 
+#### Using the library directly
+
+```javascript
+
+var SchemaManager = require('node-mysql-migrate').SchemaManager;
+
+var mgr = new SchemaManager('myproject', {
+    .. config ..
+});
+
+mgr.migrate('/path/to/data/directory')
+        .then(function() {
+            // .. post-migration code ..
+        })
+        .catch(function(e) {
+            console.error(e.message);
+        })
+        .finally(function() {
+            mgr.close();
+        })
+```
 
 #### Configuration
  
@@ -295,7 +336,7 @@ Configuration should be in one of the following formats:
     * INI
     * JSON
 
-## INI (example)
+###### INI
 
 ```
 [logging]
@@ -312,8 +353,7 @@ schema      =   myproject
 datadir     =   /etc/mysql-migraterc/data
 ```
 
-
-## JSON (example)
+###### JSON
 
 ```javascript
 {
