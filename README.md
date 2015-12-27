@@ -11,7 +11,7 @@ Simple migration tool for Mysql/Node.js
 npm install -g https://github.com/talmago/node-mysql-migrate
 ```
 
-After the installation, you can start using the command line.
+After the installation, you can start using the command line as well as the library.
 
 
 #### Command line
@@ -39,6 +39,9 @@ $ mysql-migrate --help
 
 ###### baseline
 
+`baseline` will first create the schema (if it doesn't exist already)
+and then will initiate the objects where the revision information will be hold.
+
 ```sh
 
 $ mysql-migrate baseline 1.0
@@ -52,8 +55,12 @@ $ mysql-migrate baseline 1.0
 
 ```
 
-
 ###### info
+
+`info` will show the relevant information about the current revision:
+    * Current version, defined as the highest rank that has at least one successful execution.
+    * Latest executions, including all executions of the current version, regardless of their status,
+      and failures of executions related to higher versions.
 
 ```sh
 
@@ -73,18 +80,10 @@ $ mysql-migrate info
 
 ###### migrate
 
-First, we upload our migration script to the data directory (see config section).
-For example, `/etc/mysql-migraterc/data/myproject/v1_1_Create_User_Table.sql` will have
-the following statement:
-
-```sql
-CREATE TABLE IF NOT EXISTS users (
-  name VARCHAR(25) NOT NULL,
-  PRIMARY KEY(name)
-);
-```
-
-Now we are ready to go with the migration script.
+`migrate` discovers new content in the data directory and executes it, moving the schema into a new state (revision), 
+either a version bump or changes in content of the current version. `migrate` can work with a target
+version if you want to define the specific target version and will ignore any changes related to versions
+with higher rank. In the example below, we perform a migration to version 1.1.
 
 ```sh
 
@@ -195,6 +194,87 @@ $ mysql-migrate clean
 [2015-12-26 13:26:18.072] [INFO] console - Exit with status code 0
 
 ```
+
+#### Writing a migration script
+
+###### Data Directory
+
+Data directory is where migration scripts should be uploaded.
+Please make to sure to configure the data directory in your project rc file.
+
+```
+...
+
+[migration]
+schema      =   myproject
+datadir     =   /etc/mysql-migraterc/data/myproject
+
+```
+
+###### Naming
+
+Files in the data directory must have a name in the following format: 
+
+v${VERSION}__${DESCRIPTION}.${EXT}
+
+${VERSION} must have the following structure:
+* One or more numeric parts.
+* Separated by a dot (.) or an underscore (_).
+* Underscores are replaced by dots at runtime.
+* Leading zeroes are ignored in each part.          
+
+${DESCRIPTION} must have the following structure:
+* Text.
+* Less then 255 characters.
+* Separated by a an underscore (_).
+
+${EXT} can be one of the following:
+* .js / .JS
+* .sql / .SQL
+
+Examples:
+* v1_1_Create_User_Table.sql
+* v01_1_Create_User_Table.js
+
+###### SQL
+
+Writing migration script in SQL is pretty straight-forward, as it used the standard
+MySQL programming (http://dev.mysql.com/doc/refman/5.7/en/sql-syntax.html). Below is
+a simple example which created a new table in our project called `users`.
+
+```sql
+CREATE TABLE IF NOT EXISTS users (
+  name VARCHAR(25) NOT NULL,
+  PRIMARY KEY(name)
+);
+```
+
+> **NOTICE:** Currently there is no enforcement on changes that can be done to other 
+perhaps non-managed schemas. In fact, scope of SQL scripts is not limited to the managed schema only. 
+We highly recommend to be careful with the changes as in the future we will probably
+validate the syntax before calling the execution. No need for `USE` statement, as you can assume 
+the execution will use the managed schema.
+
+###### Node.js
+
+For more complex statements, we support Node.js programming language.
+A Node.js module should export one function only that will receive one argument,
+a `connection`, which is a transaction that was succesfully established against 
+the database server. `connection` supports both native callbacks and Promises/A+ (bluebird) 
+and documentation can be found [here](https://github.com/felixge/node-mysql#establishing-connections).
+
+
+```javascript
+
+module.exports = function(connection) {
+    return connection.queryAsync("CREATE TABLE test_user (name VARCHAR(25) NOT NULL, PRIMARY KEY(name));");
+};
+
+```
+
+> **NOTICE:** Runtime errors will immediately rollback the transaction to the database.
+Node.js modules should not start or end a new transaction, as these operations are expected to raise
+runtime errors as well.
 
 
 #### Configuration
