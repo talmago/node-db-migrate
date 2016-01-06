@@ -5,6 +5,7 @@ var pkginfo = require('../package.json');
 var program = require('commander');
 var Table = require('cli-table2');
 var Config = require('../lib/config');
+var Transport = require('../lib/transport');
 var SchemaManager = require('../lib/schema');
 var exitCode = 0;
 
@@ -16,7 +17,7 @@ var exitCode = 0;
  */
 function callOperationByName(operation, arguments, callback) {
 
-    var mgr, op,
+    var mgr, op, transport,
         config = Config.db;
 
     // callback is optional. default is noop.
@@ -24,11 +25,14 @@ function callOperationByName(operation, arguments, callback) {
 
     // set schema hardcoded configs
     if (operation != "baseline") {
-        config.database = Config.migration.schema;
+        Config.setConnectionCfg("database", Config.migration.schema);
     }
 
+    // create a transport layer
+    transport = Transport.fromCfg(Config.transport.connectionString || Config.transport);
+
     // initiate a schema manager for the operation
-    mgr = new SchemaManager(Config.migration.schema, Config.db);
+    mgr = new SchemaManager(Config.migration.schema, transport);
 
     // operation is not supported
     op = _.get(mgr, operation);
