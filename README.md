@@ -1,4 +1,4 @@
-# node-mysql-migrate
+# node-db-migrate
 
 ## Table of Contents
 
@@ -28,19 +28,19 @@ Simple MySQL migration tool written in Node.js. MIT License.
 #### Installation
 
 ```sh
-npm install -g https://github.com/talmago/node-mysql-migrate
+npm install -g https://github.com/talmago/node-db-migrate
 ```
 
 > **NOTICE:** -g flag is mandatory if you wish to use the command line.
-Use `npm install https://github.com/talmago/node-mysql-migrate` if you want to use the library.
+Use `npm install https://github.com/talmago/node-db-migrate` if you want to use the library.
 
 #### Command line
 
 ```sh
 
-$ mysql-migrate --help
+$ db-migrate --help
 
-  Usage: node-mysql-migrate [options] [command]
+  Usage: db-migrate [options] [command]
 
 
   Commands:
@@ -64,7 +64,7 @@ and then will initiate the objects where the revision information will be hold.
 
 ```sh
 
-$ mysql-migrate baseline 1.0
+$ db-migrate baseline 1.0
 [2015-12-26 13:38:33.137] [INFO] [MySQL Client /localhost:3306] - Connection pool of 10 connections was established
 [2015-12-26 13:38:33.141] [INFO] [SchemaMgr/ myproject] - Creating Schema `myproject` if not exists.
 [2015-12-26 13:38:33.160] [INFO] [SchemaMgr/ myproject] - Creating `schema_version` object in `myproject` schema.
@@ -84,7 +84,7 @@ $ mysql-migrate baseline 1.0
 
 ```sh
 
-$ mysql-migrate info
+$ db-migrate info
 [2015-12-26 13:39:53.077] [INFO] [MySQL Client /localhost:3306] - Connection pool of 10 connections was established
 [2015-12-26 13:39:53.080] [INFO] [SchemaMgr/ myproject] - Reading objects from `myproject`.`schema_version`
 [2015-12-26 13:39:53.112] [INFO] console - Schema: `myproject`, Version: 1.0
@@ -107,7 +107,7 @@ with higher rank. In the example below, we perform a migration to version 1.1.
 
 ```sh
 
-$ mysql-migrate.js migrate
+$ db-migrate migrate
 [2015-12-26 14:06:08.730] [INFO] [MySQL Client /localhost:3306] - Connection pool of 10 connections was established
 [2015-12-26 14:06:08.734] [INFO] [SchemaMgr/ myproject] - Reading objects from `myproject`.`schema_version`
 [2015-12-26 14:06:08.768] [INFO] [MySQL Client /localhost:3306] - Starting transaction
@@ -122,7 +122,7 @@ And we can see the version bump by calling `info` again.
 
 ```sh
 
-$ mysql-migrate.js info
+$ db-migrate info
 [2015-12-26 14:06:57.206] [INFO] [MySQL Client /localhost:3306] - Connection pool of 10 connections was established
 [2015-12-26 14:06:57.210] [INFO] [SchemaMgr/ myproject] - Reading objects from `myproject`.`schema_version`
 [2015-12-26 14:06:57.238] [INFO] console - Schema: `myproject`, Version: 1.1
@@ -157,7 +157,7 @@ but we will be able to see the failures of the attempted version.
 
 ```sh
 
-$ mysql-migrate info
+$ db-migrate info
 [2015-12-26 17:10:23.921] [INFO] [SchemaMgr/ myproject] - Reading objects from `myproject`.`schema_version`
 [2015-12-26 17:10:24.026] [INFO] console - Schema: `myproject`, Version: 1.0
 [2015-12-26 17:10:24.044] [INFO] console - ┌────────────────────────────┬───────────────────┬────────────────┬────────┬─────────────────────────────────────────────────────────────────────────────┐
@@ -177,7 +177,7 @@ migration tool will ignore any object that was already registered to the schema 
 
 ```sh
 
-$ mysql-migrate repair
+$ db-migrate repair
 [2015-12-26 17:39:58.266] [INFO] [SchemaMgr/ myproject] - Reading objects from `myproject`.`schema_version`
 [2015-12-26 17:39:58.350] [INFO] [SchemaMgr/ myproject] - Preparing to repair 1.1/v1_1__Create_User_Table.js
 [2015-12-26 17:39:58.360] [INFO] [SchemaMgr/ myproject] - Starting transaction
@@ -191,7 +191,7 @@ If repair completed succesfully, we can now see the version bump.
 
 ```sh
 
-$ mysql-migrate info
+$ db-migrate info
 [2015-12-26 17:40:05.141] [INFO] [SchemaMgr/ myproject] - Reading objects from `myproject`.`schema_version`
 [2015-12-26 17:40:05.224] [INFO] console - Schema: `myproject`, Version: 1.1
 [2015-12-26 17:40:05.246] [INFO] console - ┌────────────────────────────┬───────────────────┬────────────────┬────────┬────────┐
@@ -207,7 +207,7 @@ $ mysql-migrate info
 
 ```sh
 
-$ mysql-migrate clean
+$ db-migrate clean
 [2015-12-26 13:26:18.042] [INFO] [MySQL Client /localhost:3306] - Connection pool of 10 connections was established
 [2015-12-26 13:26:18.045] [INFO] [SchemaMgr/ myproject] - Dropping objects in `myproject`
 [2015-12-26 13:26:18.070] [INFO] [MySQL Client /localhost:3306] - Shutting down connection pool
@@ -227,7 +227,7 @@ Please make to sure to configure the data directory in your project rc file.
 
 [migration]
 schema      =   myproject
-datadir     =   /etc/mysql-migraterc/data/myproject
+datadir     =   /etc/db-migraterc/data/myproject
 
 ```
 
@@ -259,8 +259,8 @@ Examples:
 ###### SQL
 
 Writing migration script in SQL is pretty straight-forward, as it uses the standard
-MySQL programming (http://dev.mysql.com/doc/refman/5.7/en/sql-syntax.html). Below is
-a simple example which created a new table in our project called `users`.
+SQL programming (e.g. http://dev.mysql.com/doc/refman/5.7/en/sql-syntax.html). Below is
+a simple example in MySQL which created a new table in our project called `users`.
 
 ```sql
 CREATE TABLE IF NOT EXISTS users (
@@ -300,11 +300,12 @@ runtime errors as well.
 
 ```javascript
 
-var SchemaManager = require('node-mysql-migrate').SchemaManager;
+var dbmigrate = require('node-db-migrate');
+var Transport = dbmigrate.Transport;
+var SchemaManager = dbmigrate.SchemaManager;
 
-var mgr = new SchemaManager('myproject', {
-    .. config ..
-});
+var transport = Transport.fromCfg("mysql://root@localhost");
+var mgr = new SchemaManager('myproject', transport);
 
 mgr.migrate('/path/to/data/directory')
         .then(function() {
@@ -340,17 +341,15 @@ Configuration should be in one of the following formats:
 
 ```
 [logging]
-level       =   INFO|DEBUG|WARN|ERROR
-filepath    =   /path/to/logfile
+level               =   INFO|DEBUG|WARN|ERROR
+filepath            =   /path/to/logfile
 
-[db]
-host        =   localhost
-user        =   root
-password    =   pass
+[transport]
+connectionString    =   mysql://root@localhost
 
 [migration]
-schema      =   myproject
-datadir     =   /etc/mysql-migraterc/data
+schema              =   myproject
+datadir             =   /etc/mysql-migraterc/data
 ```
 
 ###### JSON
@@ -361,10 +360,8 @@ datadir     =   /etc/mysql-migraterc/data
         "level": "INFO",
         "filepath": null
     },
-    "db": {
-        "host": "localhost",
-        "user": "root",
-        "password": ""
+    "transport": {
+        "connectionString": "mysql://root@localhost"
     },
     "migration": {
         "schema": "myproject",
