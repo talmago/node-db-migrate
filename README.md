@@ -369,3 +369,24 @@ datadir             =   /etc/mysql-migraterc/data
     }
 }
 ```
+
+###### JSON (2)
+
+```javascript
+{
+    "logging": {
+        "level": "INFO",
+        "filepath": null
+    },
+    "transport": {
+        "connection": "mysql",
+        "user": "root",
+        "host": "localhost",
+        "password": ""
+    },
+    "schema": {
+        "name": "myproject",
+        "datadir": "/etc/mysql-migraterc/data/myproject"
+    }
+}
+```
