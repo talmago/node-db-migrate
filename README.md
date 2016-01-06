@@ -325,12 +325,12 @@ Migration tool uses rc file for its settings.
 
 Configuration file should be placed in one of the following locations:
 
-    * $HOME/.mysql-migraterc
-    * $HOME/.mysql-migrate/config
-    * $HOME/.config/mysql-migrate
-    * $HOME/.config/mysql-migrate/config
-    * /etc/mysql-migraterc
-    * /etc/mysql-migrate/config
+    * $HOME/.db-migraterc
+    * $HOME/.db-migrate/config
+    * $HOME/.config/db-migrate
+    * $HOME/.config/db-migrate/config
+    * /etc/db-migraterc
+    * /etc/db-migrate/config
 
 Configuration should be in one of the following formats:
 
@@ -347,8 +347,8 @@ filepath            =   /path/to/logfile
 [transport]
 connectionString    =   mysql://root@localhost
 
-[migration]
-schema              =   myproject
+[schema]
+name                =   myproject
 datadir             =   /etc/mysql-migraterc/data
 ```
 
@@ -363,8 +363,8 @@ datadir             =   /etc/mysql-migraterc/data
     "transport": {
         "connectionString": "mysql://root@localhost"
     },
-    "migration": {
-        "schema": "myproject",
+    "schema": {
+        "name": "myproject",
         "datadir": "/etc/mysql-migraterc/data/myproject"
     }
 }

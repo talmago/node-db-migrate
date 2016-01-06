@@ -1,18 +1,18 @@
 {
-  "name": "node-mysql-migrate",
+  "name": "node-db-migrate",
   "version": "1.0.0",
-  "description": "Simple MySQL migration tool written in Node.js",
+  "description": "Simple and lightweight DB migration tool written in Node.js",
   "main": "index.js",
   "scripts": {
     "lint": "eslint lib/**/*.js index.js test/**/*.js"
   },
   "bin": {
-    "mysql-migrate": "./bin/node-mysql-migrate.js"
+    "db-migrate": "./bin/db-migrate.js"
   },
   "homepage": "https://github.com/felixge/node-mysql-migrate",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/talmago/node-mysql-migrate.git"
+    "url": "git+https://github.com/talmago/node-db-migrate.git"
   },
   "author": "Tal Almagor <tal.almagor@ironsrc.com>",
   "license": "MIT",

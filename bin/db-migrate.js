@@ -17,22 +17,21 @@ var exitCode = 0;
  */
 function callOperationByName(operation, arguments, callback) {
 
-    var mgr, op, transport,
-        config = Config.db;
+    var mgr, op, transport;
 
     // callback is optional. default is noop.
     callback = callback ? callback : _.noop;
 
     // set schema hardcoded configs
     if (operation != "baseline") {
-        Config.setConnectionCfg("database", Config.migration.schema);
+        Config.setConnectionCfg("database", Config.schema.name);
     }
 
     // create a transport layer
     transport = Transport.fromCfg(Config.transport.connectionString || Config.transport);
 
     // initiate a schema manager for the operation
-    mgr = new SchemaManager(Config.migration.schema, transport);
+    mgr = new SchemaManager(Config.schema.name, transport);
 
     // operation is not supported
     op = _.get(mgr, operation);
@@ -63,7 +62,7 @@ program
     .action(function() {
         return callOperationByName('revision', [], function(revision) {
             var version = _.get(revision, 'version');
-            console.log("Schema: `%s`, Version:", Config.migration.schema, version);
+            console.log("Schema: `%s`, Version:", Config.schema.name, version);
             if (version.toLowerCase() != "unknown") {
                 var table = new Table({
                     head: ['Script', 'Description', 'Execution Time', 'Status', 'Reason']
@@ -99,7 +98,7 @@ program
     .command('repair')
     .description("repair migration failures")
     .action(function() {
-        return callOperationByName('repair', [Config.migration.datadir]);
+        return callOperationByName('repair', [Config.schema.datadir]);
     });
 
 // `baseline`
@@ -115,7 +114,7 @@ program
     .command('migrate [version]')
     .description("migrate schema to new version")
     .action(function(version) {
-        return callOperationByName('migrate', [Config.migration.datadir, version]);
+        return callOperationByName('migrate', [Config.schema.datadir, version]);
     });
 
 // parse command line arguments
