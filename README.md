@@ -22,9 +22,9 @@
 ## Overview
 
 Simple and lightweight database migration tool written in Node.js. MIT License.
-Supports the following database flavors;
-    * [MySQL] (https://www.mysql.com/)
-    * [PostgreSQL] (http://www.postgresql.org/)
+Currently supports the following database servers:
+* [MySQL] (https://www.mysql.com/)
+* [PostgreSQL] (http://www.postgresql.org/) - In progress
 
 ## Quick Start
 
