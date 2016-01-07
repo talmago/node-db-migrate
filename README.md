@@ -278,16 +278,31 @@ the execution will use the managed schema.
 ###### Node.js
 
 For more complex statements, we support Node.js programming language.
-A Node.js module should export one function only that will receive one argument,
-a `connection`, which is a transaction that was succesfully established against 
-the database server. `connection` supports both native callbacks and Promises/A+ (bluebird) 
-and documentation can be found [here](https://github.com/felixge/node-mysql#establishing-connections).
+A Node.js migration module should export a function that will receive the following arguments:
+* `connection`: a transaction. supports both callbacks and promises. connection can be used to run SQL statements over a transaction, 
+via the `query` and `queryAsync` methods, as in the example below;
+* `query`: knex query builder as described [here] (http://knexjs.org/#Builder).
+`query` can be used in order to compose complex statements in javascript syntax.
+* `schema`: knex schema builder as described [here] (http://knexjs.org/#Schema-Building).
+`schema` is a dedicated query builder for schema changes, such as creating a new table.
 
 
 ```javascript
+// example 1: using a query over a managed transaction
+module.exports = function(connection, query, schema) {
+    return connection.queryAsync("CREATE TABLE users (name VARCHAR(25) NOT NULL, PRIMARY KEY(name));");
+};
 
-module.exports = function(connection) {
-    return connection.queryAsync("CREATE TABLE test_user (name VARCHAR(25) NOT NULL, PRIMARY KEY(name));");
+// example 2: using the query builder
+module.exports = function(transaction, query, schema) {
+    return query.insert({title: 'Slaughterhouse Five'}).into('books');
+};
+ 
+// example 3: using the schema
+module.exports = function(transaction, query, schema) {
+    return schema.createTableIfNotExists("users", function (table) {
+        table.string('name', 25);
+    });
 };
 
 ```
