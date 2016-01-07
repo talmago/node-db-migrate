@@ -21,7 +21,10 @@
 
 ## Overview
 
-Simple MySQL migration tool written in Node.js. MIT License.
+Simple and lightweight database migration tool written in Node.js. MIT License.
+Supports the following database flavors;
+    * [MySQL] (https://www.mysql.com/)
+    * [PostgreSQL] (http://www.postgresql.org/)
 
 ## Quick Start
 
