@@ -358,12 +358,29 @@ Configuration should be in one of the following formats:
 ###### INI
 
 ```
+transport    =   mysql://root@localhost
+
 [logging]
 level               =   INFO|DEBUG|WARN|ERROR
 filepath            =   /path/to/logfile
 
+[schema]
+name                =   myproject
+datadir             =   /etc/mysql-migraterc/data
+```
+
+###### INI (2)
+
+```
 [transport]
-connectionString    =   mysql://root@localhost
+connection          =   mysql
+host                =   localhost
+user                =   root
+password            =   pass
+
+[logging]
+level               =   INFO|DEBUG|WARN|ERROR
+filepath            =   /path/to/logfile
 
 [schema]
 name                =   myproject
@@ -374,12 +391,10 @@ datadir             =   /etc/mysql-migraterc/data
 
 ```javascript
 {
+    "transport": "mysql://root@localhost",
     "logging": {
         "level": "INFO",
         "filepath": null
-    },
-    "transport": {
-        "connectionString": "mysql://root@localhost"
     },
     "schema": {
         "name": "myproject",

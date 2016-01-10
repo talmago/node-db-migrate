@@ -28,7 +28,7 @@ function callOperationByName(operation, arguments, callback) {
     }
 
     // create a transport layer
-    transport = Transport.fromCfg(Config.transport.connectionString || Config.transport);
+    transport = Transport.fromCfg(Config.transport);
 
     // initiate a schema manager for the operation
     mgr = new SchemaManager(Config.schema.name, transport);
