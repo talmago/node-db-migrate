@@ -281,49 +281,47 @@ the execution will use the managed schema.
 ###### Node.js
 
 For more complex statements, we support Node.js programming language.
-A Node.js migration module should export a function that will receive the following arguments:
-* `connection`: a transaction. supports both callbacks and promises. connection can be used to run SQL statements over a transaction, 
-via the `query` and `queryAsync` methods, as in the example below;
-* `query`: knex query builder as described [here] (http://knexjs.org/#Builder).
-`query` can be used in order to compose complex statements in javascript syntax.
-* `schema`: knex schema builder as described [here] (http://knexjs.org/#Schema-Building).
-`schema` is a dedicated query builder for schema changes, such as creating a new table.
-
+A Node.js migration module should export a function that will receive one argument,
+a ```knex``` [transaction] (http://knexjs.org/#Transactions). See example belows
+how to use the transaction in several different ways.
 
 ```javascript
-// example 1: using a query over a managed transaction
-module.exports = function(connection, query, schema) {
-    return connection.queryAsync("CREATE TABLE users (name VARCHAR(25) NOT NULL, PRIMARY KEY(name));");
+// example 1: using a row query
+module.exports = function(trx) {
+    return trx.schema.raw("CREATE TABLE users (name VARCHAR(25) NOT NULL, PRIMARY KEY(name));");
 };
 
-// example 2: using the query builder
-module.exports = function(transaction, query, schema) {
-    return query.insert({title: 'Slaughterhouse Five'}).into('books');
-};
- 
-// example 3: using the schema
-module.exports = function(transaction, query, schema) {
-    return schema.createTableIfNotExists("users", function (table) {
+// example 2: using a schema builder
+module.exports = function(trx) {
+    return trx.schema.createTableIfNotExists("users", function (table) {
         table.string('name', 25);
     });
 };
 
+// example 3: using a query builder
+module.exports = function(trx) {
+    return trx.insert({title: 'Slaughterhouse Five'}).into('books');
+};
+
 ```
 
-> **NOTICE:** Runtime errors will immediately rollback the transaction to the database.
-Node.js modules should not start or end a new transaction, as these operations are expected to raise
-runtime errors as well.
+> **NOTICE:** Knex transaction is "promise aware" connection and therefore all runtime errors
+ from the exported module will immediately trigger a rollback of the transaction. In addition,
+exported Node.js modules should not start or end the given transaction, as it is managed directly by
+the schema manager.
 
 #### Using the library directly
 
 ```javascript
 
-var dbmigrate = require('node-db-migrate');
-var Transport = dbmigrate.Transport;
-var SchemaManager = dbmigrate.SchemaManager;
+var SchemaManager = require('node-db-migrate').SchemaManager;
 
-var transport = Transport.fromCfg("mysql://root@localhost");
-var mgr = new SchemaManager('myproject', transport);
+var mgr = new SchemaManager("myproject", "mysql", {
+    "host": "localhost",
+    "port": 3367,
+    "user": "root",
+    "password": "nopassword"
+});
 
 mgr.migrate('/path/to/data/directory')
         .then(function() {

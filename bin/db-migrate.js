@@ -1,11 +1,31 @@
 #!/usr/bin/env node
 
+/*
+
+$./db-migrate.js --help
+
+Usage: db-migrate [options] [command]
+
+
+Commands:
+
+    info                show revision information
+    clean               drops all objects in the managed schema
+    repair              repair migration failures
+    baseline <version>  baseline existing schema to initial version
+    migrate [version]   migrate schema to new version
+
+Options:
+
+    -h, --help     output usage information
+    -V, --version  output the version number
+*/
+
 var _ = require('lodash');
 var pkginfo = require('../package.json');
 var program = require('commander');
 var Table = require('cli-table2');
 var Config = require('../lib/config');
-var Transport = require('../lib/transport');
 var SchemaManager = require('../lib/schema');
 var exitCode = 0;
 
@@ -17,21 +37,13 @@ var exitCode = 0;
  */
 function callOperationByName(operation, arguments, callback) {
 
-    var mgr, op, transport;
+    var mgr, op;
 
     // callback is optional. default is noop.
     callback = callback ? callback : _.noop;
 
-    // set schema hardcoded configs
-    if (operation != "baseline") {
-        Config.setConnectionCfg("database", Config.schema.name);
-    }
-
-    // create a transport layer
-    transport = Transport.fromCfg(Config.transport);
-
     // initiate a schema manager for the operation
-    mgr = new SchemaManager(Config.schema.name, transport);
+    mgr = new SchemaManager(Config.schema.name, Config.client, Config.connection);
 
     // operation is not supported
     op = _.get(mgr, operation);
