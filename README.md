@@ -24,18 +24,18 @@
 Simple and lightweight database migration tool written in Node.js. MIT License.
 Currently supports the following database servers:
 * [MySQL] (https://www.mysql.com/)
-* [PostgreSQL] (http://www.postgresql.org/) - In progress
+* [PostgreSQL] (http://www.postgresql.org/)
 
 ## Quick Start
 
 #### Installation
 
 ```sh
-npm install -g https://github.com/talmago/node-db-migrate
+npm install -g node-db-migrate
 ```
 
 > **NOTICE:** -g flag is mandatory if you wish to use the command line.
-Use `npm install https://github.com/talmago/node-db-migrate` if you want to use the library.
+Use `npm install node-db-migrate` if you want to use the library.
 
 #### Command line
 
@@ -348,6 +348,13 @@ Configuration file should be placed in one of the following locations:
     * /etc/db-migraterc
     * /etc/db-migrate/config
 
+Alternatively, it is possible to set the path to the configuration file
+when using the command line.
+
+```sh
+$ db-migrate migrate --config ${CONFIG_FILE_PATH}
+```
+
 Configuration should be in one of the following formats:
 
     * INI
@@ -356,11 +363,12 @@ Configuration should be in one of the following formats:
 ###### INI
 
 ```
-transport    =   mysql://root@localhost
+client              =   mysql
+
+connection          =   mysql://root@localhost
 
 [logging]
 level               =   INFO|DEBUG|WARN|ERROR
-filepath            =   /path/to/logfile
 
 [schema]
 name                =   myproject
@@ -370,29 +378,20 @@ datadir             =   /etc/mysql-migraterc/data
 ###### INI (2)
 
 ```
-[transport]
-connection          =   mysql
+[connection]
 host                =   localhost
 user                =   root
 password            =   pass
-
-[logging]
-level               =   INFO|DEBUG|WARN|ERROR
-filepath            =   /path/to/logfile
-
-[schema]
-name                =   myproject
-datadir             =   /etc/mysql-migraterc/data
 ```
 
 ###### JSON
 
 ```javascript
 {
-    "transport": "mysql://root@localhost",
+    "client": "mysql",
+    "connection": "mysql://root@localhost",
     "logging": {
-        "level": "INFO",
-        "filepath": null
+        "level": "INFO"
     },
     "schema": {
         "name": "myproject",
@@ -406,11 +405,10 @@ datadir             =   /etc/mysql-migraterc/data
 ```javascript
 {
     "logging": {
-        "level": "INFO",
-        "filepath": null
+        "level": "INFO"
     },
-    "transport": {
-        "connection": "mysql",
+    "client": "mysql",
+    "connection": {
         "user": "root",
         "host": "localhost",
         "password": ""
@@ -420,4 +418,18 @@ datadir             =   /etc/mysql-migraterc/data
         "datadir": "/etc/mysql-migraterc/data/myproject"
     }
 }
+```
+
+
+###### Using environment variables
+
+Setting the configuration for the command line is also possible through environment variables:
+
+    * prefixed by "db-migrate_".
+    * using "__" to represent nested properties.
+
+For example:
+
+```sh
+$ db-migrate_client=mysql db-migrate__connection=mysql://root@localhost db-migrate migrate
 ```
