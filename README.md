@@ -244,7 +244,8 @@ ${VERSION} must have the following structure:
 * One or more numeric parts.
 * Separated by a dot (.) or an underscore (_).
 * Underscores are replaced by dots at runtime.
-* Leading zeroes are ignored in each part.          
+* Leading zeroes are ignored in each part.  
+* Between version and description must be two underscores.
 
 ${DESCRIPTION} must have the following structure:
 * Text.
@@ -256,8 +257,8 @@ ${EXT} can be one of the following:
 * .sql / .SQL
 
 Examples:
-* v1_1_Create_User_Table.sql
-* v01_1_Create_User_Table.js
+* v1_1__Create_User_Table.sql
+* v01_1__Create_User_Table.js
 
 ###### SQL
 
