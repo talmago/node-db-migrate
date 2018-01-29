@@ -27,7 +27,10 @@ var program = require('commander');
 var Table = require('cli-table2');
 var Config = require('../lib/config');
 var SchemaManager = require('../lib/schema');
+var Logging = require('../lib/logging');
 var exitCode = 0;
+
+var logger = Logging.getLogger("console");
 
 /**
  * Short circuit for the command line options.
@@ -54,7 +57,7 @@ function callOperationByName(operation, arguments, callback) {
     return op.bind(mgr).apply(null, arguments)
         .then(callback)
         .catch(function(e) {
-            console.error(e.message);
+            logger.error(e.message);
             exitCode = 1;
         })
         .finally(function() {
@@ -74,7 +77,7 @@ program
     .action(function() {
         return callOperationByName('revision', [], function(revision) {
             var version = _.get(revision, 'version');
-            console.log("Schema: `%s`, Version:", Config.schema.name, version);
+            logger.info("Schema: `%s`, Version:", Config.schema.name, version);
             if (version.toLowerCase() != "unknown") {
                 var table = new Table({
                     head: ['Script', 'Description', 'Execution Time', 'Status', 'Reason']
@@ -91,7 +94,7 @@ program
                     );
                 });
                 _.each(table.toString().split("\n"), function(line) {
-                    console.log(line);
+                    logger.info(line);
                 });
             }
         });
@@ -134,5 +137,5 @@ program.parse(process.argv);
 
 // prompt exit code on exit
 process.on('exit', function(code) {
-    console.log('Exit with status code %s', code);
+    logger.info('Exit with status code %s', code);
 });
