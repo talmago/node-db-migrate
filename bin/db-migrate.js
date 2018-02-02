@@ -21,13 +21,13 @@ Options:
     -V, --version  output the version number
 */
 
-var _ = require('lodash');
-var pkginfo = require('../package.json');
-var program = require('commander');
-var Table = require('cli-table2');
-var Config = require('../lib/config');
-var SchemaManager = require('../lib/schema');
-var Logging = require('../lib/logging');
+var _ = require("lodash");
+var pkginfo = require("../package.json");
+var program = require("commander");
+var Table = require("cli-table2");
+var Config = require("../lib/config");
+var SchemaManager = require("../lib/schema");
+var Logging = require("../lib/logging");
 var exitCode = 0;
 
 var logger = Logging.getLogger("console");
@@ -62,8 +62,8 @@ function callOperationByName(operation, arguments, callback) {
         })
         .finally(function() {
             mgr.close();
-            process.exit(exitCode)
-        })
+            process.exit(exitCode);
+        });
 }
 
 // `version`
@@ -72,15 +72,15 @@ program
 
 // `info` command
 program
-    .command('info')
-    .description('show revision information')
+    .command("info")
+    .description("show revision information")
     .action(function() {
-        return callOperationByName('revision', [], function(revision) {
-            var version = _.get(revision, 'version');
+        return callOperationByName("revision", [], function(revision) {
+            var version = _.get(revision, "version");
             logger.info("Schema: `%s`, Version:", Config.schema.name, version);
             if (version.toLowerCase() != "unknown") {
                 var table = new Table({
-                    head: ['Script', 'Description', 'Execution Time', 'Status', 'Reason']
+                    head: ["Script", "Description", "Execution Time", "Status", "Reason"]
                 });
                 _.each(revision.migrations || [], function(migration) {
                     table.push(
@@ -102,40 +102,40 @@ program
 
 // `clean`
 program
-    .command('clean')
-    .description('drops all objects in the managed schema')
+    .command("clean")
+    .description("drops all objects in the managed schema")
     .action(function() {
-        return callOperationByName('clean', []);
+        return callOperationByName("clean", []);
     });
 
 // `repair`
 program
-    .command('repair')
+    .command("repair")
     .description("repair migration failures")
     .action(function() {
-        return callOperationByName('repair', [Config.schema.datadir]);
+        return callOperationByName("repair", [Config.schema.datadir]);
     });
 
 // `baseline`
 program
-    .command('baseline <version>')
+    .command("baseline <version>")
     .description("baseline existing schema to initial version")
     .action(function(version) {
-        return callOperationByName('baseline', [version]);
+        return callOperationByName("baseline", [version]);
     });
 
 // `migrate`
 program
-    .command('migrate [version]')
+    .command("migrate [version]")
     .description("migrate schema to new version")
     .action(function(version) {
-        return callOperationByName('migrate', [Config.schema.datadir, version]);
+        return callOperationByName("migrate", [Config.schema.datadir, version]);
     });
 
 // parse command line arguments
 program.parse(process.argv);
 
 // prompt exit code on exit
-process.on('exit', function(code) {
-    logger.info('Exit with status code %s', code);
+process.on("exit", function(code) {
+    logger.info("Exit with status code %s", code);
 });
