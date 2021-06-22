@@ -4,11 +4,11 @@
   "description": "Simple and lightweight DB migration tool written in Node.js",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint lib/**/*.js index.js test/**/*.js"
+    "lint": "eslint lib/**/*.js index.js test/**/*.js",
+    "build": "echo this wont work"
   },
   "bin": {
-    "db-migrate": "./bin/db-migrate.js",
-    "build": "echo this wont work"
+    "db-migrate": "./bin/db-migrate.js"
   },
   "homepage": "https://github.com/felixge/node-mysql-migrate",
   "repository": "git+https://github.com/talmago/node-db-migrate.git",
