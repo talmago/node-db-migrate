@@ -10,8 +10,8 @@
   "bin": {
     "db-migrate": "./bin/db-migrate.js"
   },
-  "homepage": "https://github.com/felixge/node-mysql-migrate",
-  "repository": "git+https://github.com/talmago/node-db-migrate.git",
+  "homepage": "https://github.com/ironsource-aura/aura-node-db-migrate",
+  "repository": "https://github.com/ironsource-aura/aura-node-db-migrate.git",
   "author": "Tal Almagor <almagoric@gmail.com>",
   "license": "MIT",
   "dependencies": {
