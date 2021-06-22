@@ -7,7 +7,8 @@
     "lint": "eslint lib/**/*.js index.js test/**/*.js"
   },
   "bin": {
-    "db-migrate": "./bin/db-migrate.js"
+    "db-migrate": "./bin/db-migrate.js",
+    "build": "echo this wont work"
   },
   "homepage": "https://github.com/felixge/node-mysql-migrate",
   "repository": "git+https://github.com/talmago/node-db-migrate.git",
