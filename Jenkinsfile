@@ -21,6 +21,6 @@ ci 'ecs-global-slave', {
         auraNpm.publishNpmModuleToArtifactory()
     }
 
-    def service_version = auraNpm.retrieve_node_module_version()
+    def service_version = auraNpm.retrieve_node_module_version("")
     manager.addShortText("v$service_version", "black", "lightblue", "1px", "black")
 }
