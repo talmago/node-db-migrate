@@ -16,9 +16,10 @@ ci 'ecs-global-slave', {
 
     // This section will run on push/merge to release/hotfix/master branch
     production {
-        auraNpm.install()
-
-        auraNpm.publishNpmModuleToArtifactory()
+            sh '''
+                npm install --verbose;
+                npm publish --verbose;
+           '''
     }
 
     def service_version = auraNpm.retrieve_node_module_version("")
