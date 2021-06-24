@@ -10,6 +10,9 @@
   "bin": {
     "db-migrate": "./bin/db-migrate.js"
   },
+  "publishConfig": {
+    "registry": "https://ironsrc.jfrog.io/ironsrc/api/npm/npmjs-local"
+  },
   "homepage": "https://github.com/ironsource-aura/aura-node-db-migrate",
   "repository": "https://github.com/ironsource-aura/aura-node-db-migrate.git",
   "author": "Tal Almagor <almagoric@gmail.com>",
